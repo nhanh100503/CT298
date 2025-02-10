@@ -26,6 +26,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 
 public class AuthService {
+    
     final PasswordUtil passwordUtil;
     final AccessTokenUtil accessTokenUtil;
     final RefreshTokenUtil refreshTokenUtil;
