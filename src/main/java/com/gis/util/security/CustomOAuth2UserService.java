@@ -1,4 +1,4 @@
-package com.gis.service;
+package com.gis.util.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

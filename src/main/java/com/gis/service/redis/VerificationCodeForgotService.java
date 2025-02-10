@@ -37,4 +37,5 @@ public class VerificationCodeForgotService {
         String storedEmail = stringRedisTemplate.opsForValue().get(code);
         return email.equals(storedEmail);
     }
+
 }

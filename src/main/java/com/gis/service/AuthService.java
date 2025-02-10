@@ -10,40 +10,42 @@ import com.gis.exception.AppException;
 import com.gis.mapper.CustomerMapper;
 import com.gis.model.Customer;
 import com.gis.repository.CustomerRepository;
+import com.gis.repository.RefreshTokenRepository;
+import com.gis.repository.UserRepository;
+import com.gis.service.redis.VerificationCodeForgotService;
 import com.gis.util.PasswordUtil;
 import com.gis.util.jwt.AccessTokenUtil;
 import com.gis.util.jwt.RefreshTokenUtil;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-
 public class AuthService {
-
-    final PasswordUtil passwordUtil;
-    final AccessTokenUtil accessTokenUtil;
-    final RefreshTokenUtil refreshTokenUtil;
-    final CustomerRepository customerRepository;
-    final CustomerMapper customerMapper;
+    private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
+    private final UserRepository userRepository;
+    private final PasswordUtil passwordUtil;
+    private final AccessTokenUtil accessTokenUtil;
+    private final RefreshTokenUtil refreshTokenUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final VerificationCodeForgotService verificationCodeForgotService;
 
     public void registerCustomer(AuthCustomerRegisterRequest request) {
         boolean existedCustomer = customerRepository.existsByEmailAndIsOutsideFalse(request.getEmail());
         if (existedCustomer) {
-            throw new AppException(HttpStatus.BAD_REQUEST, "Customer email already exists", "auth-e-01");
+            throw new AppException(HttpStatus.BAD_REQUEST, "Email has existed", "auth-e-01");
         }
     }
 
     public AuthResponse verifyRegisterCustomer(AuthCustomerRegisterRequest request) {
         boolean existedCustomer = customerRepository.existsByEmailAndIsOutsideFalse(request.getEmail());
         if (existedCustomer) {
-            throw new AppException(HttpStatus.BAD_REQUEST, "Customer email already exists", "auth-e-01");
+            throw new AppException(HttpStatus.BAD_REQUEST, "Email has existed", "auth-e-01");
         }
         String hashedPassword = passwordUtil.encodePassword(request.getPassword());
         request.setPassword(hashedPassword);
@@ -67,7 +69,7 @@ public class AuthService {
 
     public AuthResponse loginCustomer(AuthCustomerLoginRequest request) {
         Customer customer = customerRepository.findByEmailAndIsOutsideFalse(request.getEmail()).orElseThrow(
-                () -> new AppException(HttpStatus.NOT_FOUND, "Customer email not found", "auth-e-02")
+                () -> new AppException(HttpStatus.NOT_FOUND, "Email customer not found", "auth-e-02")
         );
         checkCustomerStatus(customer);
         boolean isMatchPassword = passwordUtil.checkPassword(request.getPassword(), customer.getPassword());
@@ -88,6 +90,7 @@ public class AuthService {
         Customer customer = customerRepository.findByIsOutsideTrueAndProviderNameAndProviderId(providerName, userOAuthId)
                 .orElseGet(() -> {
                     Customer newCustomer = Customer.builder()
+                            .id(UUID.randomUUID().toString())
                             .email(oAuth2User.getAttribute("email"))
                             .name(oAuth2User.getAttribute("name"))
                             .isOutside(true)

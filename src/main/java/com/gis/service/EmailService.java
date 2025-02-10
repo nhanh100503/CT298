@@ -1,6 +1,7 @@
 package com.gis.service;
 
 import com.gis.dto.mail.SendEmailDto;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -30,7 +31,7 @@ public class EmailService {
             helper.setText(emailPayload.getText(), true);
             helper.setFrom(systemEmail);
             mailSender.send(message);
-        } catch (jakarta.mail.MessagingException e) {
+        } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
     }
