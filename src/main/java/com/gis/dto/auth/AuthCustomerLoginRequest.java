@@ -7,9 +7,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class AuthRegisterCustomerRequest {
-    String name;
+public class AuthCustomerLoginRequest {
     String email;
-    String phone;
     String password;
 }
