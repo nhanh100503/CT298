@@ -28,7 +28,6 @@ public class Customer implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String phone;
 
     @Column(nullable = false)

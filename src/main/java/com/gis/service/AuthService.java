@@ -9,8 +9,10 @@ import com.gis.enums.UserStatus;
 import com.gis.exception.AppException;
 import com.gis.mapper.CustomerMapper;
 import com.gis.model.Customer;
+import com.gis.model.Type;
 import com.gis.repository.CustomerRepository;
 import com.gis.repository.RefreshTokenRepository;
+import com.gis.repository.TypeRepository;
 import com.gis.repository.UserRepository;
 import com.gis.service.redis.VerificationCodeForgotService;
 import com.gis.util.PasswordUtil;
@@ -29,6 +31,7 @@ public class AuthService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final UserRepository userRepository;
+    private final TypeRepository typeRepository;
     private final PasswordUtil passwordUtil;
     private final AccessTokenUtil accessTokenUtil;
     private final RefreshTokenUtil refreshTokenUtil;
@@ -87,6 +90,7 @@ public class AuthService {
     public AuthResponse loginOAuth2Success(OAuth2User oAuth2User) {
         String userOAuthId = oAuth2User.getAttribute("sub");
         String providerName = oAuth2User.getAttribute("provider");
+        Type type = typeRepository.findByName("Thành viên");
         Customer customer = customerRepository.findByIsOutsideTrueAndProviderNameAndProviderId(providerName, userOAuthId)
                 .orElseGet(() -> {
                     Customer newCustomer = Customer.builder()
@@ -99,6 +103,7 @@ public class AuthService {
                             .avatar(oAuth2User.getAttribute("picture"))
                             .role(ERole.CUSTOMER)
                             .status(UserStatus.ACTIVE)
+                            .type(type)
                             .build();
                     return customerRepository.save(newCustomer);
                 });
