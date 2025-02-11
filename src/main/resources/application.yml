@@ -3,6 +3,14 @@ spring:
     import: "optional:file:.env[.properties]"
   application:
     name: gis
+  data:
+    redis:
+      host: ${REDIS_HOST} # Lấy từ biến môi trường REDIS_HOST
+      port: ${REDIS_PORT} # Lấy từ biến môi trường REDIS_PORT
+      password: ${REDIS_PASSWORD} # Lấy từ biến môi trường REDIS_PASSWORD
+      timeout: 5000 # Thời gian chờ kết nối
+  cache:
+    type: redis
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}

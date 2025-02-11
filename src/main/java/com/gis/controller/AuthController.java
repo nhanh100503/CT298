@@ -2,10 +2,7 @@ package com.gis.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gis.dto.ApiResponse;
-import com.gis.dto.auth.AuthCustomerLoginRequest;
-import com.gis.dto.auth.AuthCustomerRegisterRequest;
-import com.gis.dto.auth.AuthRefreshTokenRequest;
-import com.gis.dto.auth.AuthResponse;
+import com.gis.dto.auth.*;
 import com.gis.service.AuthService;
 import com.gis.service.EmailService;
 import com.gis.service.redis.VerificationCodeForgotService;
@@ -81,5 +78,41 @@ public class AuthController {
                 .queryParam("refreshToken", authResponse.getRefreshToken())
                 .toUriString();
         return new RedirectView(redirectUrl);
+    }
+
+    //    Customer refresh token
+    @PostMapping("/refresh-token-customer")
+    public ResponseEntity<ApiResponse<AuthResponse>> refreshTokenCustomer(@RequestBody @Valid AuthRefreshTokenRequest request){
+        AuthResponse authResponse = authService.refreshTokenCustomer(request);
+        ApiResponse<AuthResponse> apiResponse =  ApiResponse.<AuthResponse>builder()
+                .data(authResponse)
+                .code("auth-s-04")
+                .message("Refresh new access token successfully")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    //    Customer đăng nhập tài khoản
+    @PostMapping("/login-user")
+    public ResponseEntity<?> loginUser(@RequestBody @Valid AuthUserLoginRequest request){
+        AuthResponse authResponse = authService.loginUser(request);
+        ApiResponse<AuthResponse> apiResponse =  ApiResponse.<AuthResponse>builder()
+                .data(authResponse)
+                .code("auth-s-03")
+                .message("Login successfully")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    //    Customer refresh token
+    @PostMapping("/refresh-token-user")
+    public ResponseEntity<ApiResponse<AuthResponse>> refreshTokenUser(@RequestBody @Valid AuthRefreshTokenRequest request){
+        AuthResponse authResponse = authService.refreshTokenUser(request);
+        ApiResponse<AuthResponse> apiResponse =  ApiResponse.<AuthResponse>builder()
+                .data(authResponse)
+                .code("auth-s-04")
+                .message("Refresh new access token successfully")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 }

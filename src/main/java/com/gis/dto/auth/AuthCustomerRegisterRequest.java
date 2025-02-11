@@ -18,9 +18,6 @@ public class AuthCustomerRegisterRequest {
     @Email(message = "Email không đúng định dạng")
     String email;
 
-    @NotNull(message = "Số điện thoại không được để trống")
-    String phone;
-
     @NotBlank(message = "Mật khẩu không được để trống")
     String password;
 }

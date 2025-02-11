@@ -37,8 +37,10 @@ public class Customer implements Serializable {
 
     private String avatar;
 
+    @Column(nullable = false)
     private Long accumulate;
 
+    @Column(nullable = false)
     private Long total;
 
     @Enumerated(EnumType.STRING)

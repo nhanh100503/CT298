@@ -1,15 +1,15 @@
 package com.gis.service;
 
-import com.gis.dto.auth.AuthCustomerLoginRequest;
-import com.gis.dto.auth.AuthCustomerRegisterRequest;
-import com.gis.dto.auth.AuthResponse;
+import com.gis.dto.auth.*;
 import com.gis.dto.jwt.JWTPayloadDto;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
 import com.gis.exception.AppException;
 import com.gis.mapper.CustomerMapper;
+import com.gis.mapper.UserMapper;
 import com.gis.model.Customer;
 import com.gis.model.Type;
+import com.gis.model.User;
 import com.gis.repository.CustomerRepository;
 import com.gis.repository.RefreshTokenRepository;
 import com.gis.repository.TypeRepository;
@@ -29,7 +29,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthService {
     private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
     private final UserRepository userRepository;
     private final TypeRepository typeRepository;
     private final PasswordUtil passwordUtil;
@@ -37,6 +36,9 @@ public class AuthService {
     private final RefreshTokenUtil refreshTokenUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final VerificationCodeForgotService verificationCodeForgotService;
+
+    private final CustomerMapper customerMapper;
+    private final UserMapper userMapper;
 
     public void registerCustomer(AuthCustomerRegisterRequest request) {
         boolean existedCustomer = customerRepository.existsByEmailAndIsOutsideFalse(request.getEmail());
@@ -52,14 +54,17 @@ public class AuthService {
         }
         String hashedPassword = passwordUtil.encodePassword(request.getPassword());
         request.setPassword(hashedPassword);
+        Type type = typeRepository.findByName("Thành viên");
         Customer customer = Customer.builder()
-                .id(UUID.randomUUID().toString())
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .role(ERole.CUSTOMER)
                 .isOutside(false)
                 .status(UserStatus.ACTIVE)
+                .accumulate(0L)
+                .total(0L)
+                .type(type)
                 .build();
         customerRepository.save(customer);
         String accessTokenString = accessTokenUtil.generateTokenCustomer(customerMapper.toJWTPayloadDto(customer));
@@ -75,8 +80,8 @@ public class AuthService {
                 () -> new AppException(HttpStatus.NOT_FOUND, "Email customer not found", "auth-e-02")
         );
         checkCustomerStatus(customer);
-        boolean isMatchPassword = passwordUtil.checkPassword(request.getPassword(), customer.getPassword());
-        if (!isMatchPassword) {
+        boolean isMatchPasswordCustomer = passwordUtil.checkPassword(request.getPassword(), customer.getPassword());
+        if (!isMatchPasswordCustomer) {
             throw new AppException(HttpStatus.BAD_REQUEST, "Wrong password", "auth-e-03");
         }
         String accessTokenString = accessTokenUtil.generateTokenCustomer(customerMapper.toJWTPayloadDto(customer));
@@ -88,8 +93,15 @@ public class AuthService {
     }
 
     public AuthResponse loginOAuth2Success(OAuth2User oAuth2User) {
-        String userOAuthId = oAuth2User.getAttribute("sub");
         String providerName = oAuth2User.getAttribute("provider");
+        String userOAuthId;
+        if ("google".equals(providerName)) {
+            userOAuthId = oAuth2User.getAttribute("sub"); // Google sử dụng "sub" làm ID
+        } else if ("facebook".equals(providerName)) {
+            userOAuthId = oAuth2User.getAttribute("id"); // Facebook sử dụng "id"
+        } else {
+            throw new IllegalArgumentException("Unsupported OAuth2 provider: " + providerName);
+        }
         Type type = typeRepository.findByName("Thành viên");
         Customer customer = customerRepository.findByIsOutsideTrueAndProviderNameAndProviderId(providerName, userOAuthId)
                 .orElseGet(() -> {
@@ -104,6 +116,8 @@ public class AuthService {
                             .role(ERole.CUSTOMER)
                             .status(UserStatus.ACTIVE)
                             .type(type)
+                            .accumulate(0L)
+                            .total(0L)
                             .build();
                     return customerRepository.save(newCustomer);
                 });
@@ -118,9 +132,49 @@ public class AuthService {
                 .build();
     }
 
+    public AuthResponse refreshTokenCustomer(AuthRefreshTokenRequest request) {
+        JWTPayloadDto payload = refreshTokenUtil.verifyTokenCustomer(request.getRefreshToken());
+        String accessTokenString = accessTokenUtil.generateTokenCustomer(payload);
+        return AuthResponse.builder()
+                .accessToken(accessTokenString)
+                .build();
+    }
+
+
+    public AuthResponse loginUser(AuthUserLoginRequest request) {
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Email customer not found", "auth-e-02")
+        );
+        checkUserStatus(user);
+        boolean isMatchPasswordUser = passwordUtil.checkPassword(request.getPassword(), user.getPassword());
+        if (!isMatchPasswordUser) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Wrong password", "auth-e-03");
+        }
+        String accessTokenString = accessTokenUtil.generateTokenUser(userMapper.toJWTPayloadDto(user));
+        String refreshTokenString = refreshTokenUtil.generateTokenUser(userMapper.toJWTPayloadDto(user), user);
+        return AuthResponse.builder()
+                .accessToken(accessTokenString)
+                .refreshToken(refreshTokenString)
+                .build();
+    }
+
+    public AuthResponse refreshTokenUser(AuthRefreshTokenRequest request) {
+        JWTPayloadDto payload = refreshTokenUtil.verifyTokenUser(request.getRefreshToken());
+        String accessTokenString = accessTokenUtil.generateTokenUser(payload);
+        return AuthResponse.builder()
+                .accessToken(accessTokenString)
+                .build();
+    }
+
     private void checkCustomerStatus(Customer customer){
         if(!customer.getStatus().equals(UserStatus.ACTIVE)){
             throw new AppException(HttpStatus.BAD_REQUEST, "Customer is not active", "auth-e-06");
+        }
+    }
+
+    private void checkUserStatus(User user){
+        if(!user.getStatus().equals(UserStatus.ACTIVE)){
+            throw new AppException(HttpStatus.BAD_REQUEST, "User is not active", "auth-e-07");
         }
     }
 }
