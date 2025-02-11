@@ -104,6 +104,16 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @PostMapping("/logout-user")
+    public ResponseEntity<ApiResponse<Void>> logOut(@RequestBody @Valid AuthLogOutRequest request){
+        authService.logOutUser(request);
+        ApiResponse<Void> apiResponse =  ApiResponse.<Void>builder()
+                .code("auth-s-05")
+                .message("Log out successfully")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
     //    Customer refresh token
     @PostMapping("/refresh-token-user")
     public ResponseEntity<ApiResponse<AuthResponse>> refreshTokenUser(@RequestBody @Valid AuthRefreshTokenRequest request){

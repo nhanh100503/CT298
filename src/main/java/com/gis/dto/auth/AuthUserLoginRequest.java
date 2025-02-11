@@ -11,6 +11,10 @@ public class AuthUserLoginRequest {
     @NotBlank(message = "Tên đăng nhập không được trống")
     String username;
 
-    @NotBlank(message = "Mật khẩu không được trốn")
+    @NotBlank(message = "Mật khẩu không được trống")
     String password;
+
+    Double latitude;
+
+    Double longitude;
 }

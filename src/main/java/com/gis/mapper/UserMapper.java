@@ -1,5 +1,6 @@
 package com.gis.mapper;
 
+import com.gis.dto.driver.DriverResponse;
 import com.gis.dto.jwt.JWTPayloadDto;
 import com.gis.dto.user.UserCreateAccountResponse;
 import com.gis.enums.ERole;
@@ -18,4 +19,6 @@ public interface UserMapper {
     }
 
     UserCreateAccountResponse toUserCreateAccountResponse(User user);
+
+    DriverResponse toDriverResponse(User user);
 }

@@ -2,12 +2,14 @@ package com.gis.service;
 
 import com.gis.dto.auth.*;
 import com.gis.dto.jwt.JWTPayloadDto;
+import com.gis.enums.DriverStatus;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
 import com.gis.exception.AppException;
 import com.gis.mapper.CustomerMapper;
 import com.gis.mapper.UserMapper;
 import com.gis.model.Customer;
+import com.gis.model.RefreshToken;
 import com.gis.model.Type;
 import com.gis.model.User;
 import com.gis.repository.CustomerRepository;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -150,6 +153,14 @@ public class AuthService {
         if (!isMatchPasswordUser) {
             throw new AppException(HttpStatus.BAD_REQUEST, "Wrong password", "auth-e-03");
         }
+        if (user.getRole() == ERole.DRIVER && user.getDriverStatus() == DriverStatus.OFF){
+            user.setDriverStatus(DriverStatus.FREE);
+        }
+        if (user.getLatitude() != null && user.getLongitude() != null) {
+            user.setTime(LocalDateTime.now());
+            user.setLatitude(request.getLatitude());
+            user.setLongitude(request.getLongitude());
+        }
         String accessTokenString = accessTokenUtil.generateTokenUser(userMapper.toJWTPayloadDto(user));
         String refreshTokenString = refreshTokenUtil.generateTokenUser(userMapper.toJWTPayloadDto(user), user);
         return AuthResponse.builder()
@@ -164,6 +175,24 @@ public class AuthService {
         return AuthResponse.builder()
                 .accessToken(accessTokenString)
                 .build();
+    }
+
+    public void logOutUser(AuthLogOutRequest request) {
+        JWTPayloadDto payload = refreshTokenUtil.verifyTokenUser(request.getRefreshToken());
+        RefreshToken refreshToken = refreshTokenRepository
+                .findByUserId(payload.getId())
+                .orElseThrow(
+                        () -> new AppException(HttpStatus.NOT_FOUND, "Refresh token not found", "auth-e-04")
+                );
+        refreshToken.setToken(null);
+        refreshTokenRepository.save(refreshToken);
+
+        User user = userRepository.findById(payload.getId())
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User not found", "user-e-01"));
+        if (user.getDriverStatus() != null) {
+            user.setDriverStatus(DriverStatus.OFF);
+            userRepository.save(user);
+        }
     }
 
     private void checkCustomerStatus(Customer customer){
