@@ -1,5 +1,6 @@
 package com.gis.service;
 
+import ch.qos.logback.classic.Logger;
 import com.gis.dto.auth.*;
 import com.gis.dto.jwt.JWTPayloadDto;
 import com.gis.enums.DriverStatus;
@@ -156,10 +157,11 @@ public class AuthService {
         if (user.getRole() == ERole.DRIVER && user.getDriverStatus() == DriverStatus.OFF){
             user.setDriverStatus(DriverStatus.FREE);
         }
-        if (user.getLatitude() != null && user.getLongitude() != null) {
+        if (request.getLatitude() != null && request.getLongitude() != null) {
             user.setTime(LocalDateTime.now());
             user.setLatitude(request.getLatitude());
             user.setLongitude(request.getLongitude());
+            userRepository.save(user);
         }
         String accessTokenString = accessTokenUtil.generateTokenUser(userMapper.toJWTPayloadDto(user));
         String refreshTokenString = refreshTokenUtil.generateTokenUser(userMapper.toJWTPayloadDto(user), user);

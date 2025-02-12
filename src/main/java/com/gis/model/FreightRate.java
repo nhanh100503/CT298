@@ -1,5 +1,6 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,7 @@ public class FreightRate implements Serializable {
     private Integer lower;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "freightRate")
+    @JsonManagedReference
     private List<Price> price;
 
     public FreightRate(Integer upper, Integer lower) {
