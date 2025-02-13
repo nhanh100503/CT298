@@ -47,5 +47,9 @@ public class Price implements Serializable {
         this.freightRate = freightRate;
         this.vehicleType = vehicleType;
     }
+
+    public Double getPrice() {
+        return price;
+    }
 }
 
