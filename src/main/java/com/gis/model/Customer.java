@@ -28,7 +28,6 @@ public class Customer implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String phone;
 
     @Column(nullable = false)
@@ -38,8 +37,10 @@ public class Customer implements Serializable {
 
     private String avatar;
 
+    @Column(nullable = false)
     private Long accumulate;
 
+    @Column(nullable = false)
     private Long total;
 
     @Enumerated(EnumType.STRING)
