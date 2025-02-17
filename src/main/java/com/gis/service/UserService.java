@@ -1,5 +1,6 @@
 package com.gis.service;
 
+import com.gis.dto.drive.DriveRequest;
 import com.gis.dto.driver.DriverResponse;
 import com.gis.dto.user.UserCreateAccountRequest;
 import com.gis.dto.user.UserCreateAccountResponse;
@@ -23,6 +24,7 @@ public class UserService {
     private final PasswordUtil passwordUtil;
     private final CreateUserUtil createUserUtil;
     private final UserMapper userMapper;
+    private final DriveService driveService;
 
     public UserCreateAccountResponse createAccountUser(UserCreateAccountRequest request) {
         boolean existedUser = userRepository.existsByEmail(request.getEmail());
@@ -48,11 +50,11 @@ public class UserService {
         return response;
     }
 
-    public DriverResponse activeDriver(String driverId){
+    public void activeDriver(String driverId, DriveRequest request){
         User user = userRepository.findById(driverId).orElseThrow(()
                 -> new AppException(HttpStatus.NOT_FOUND, "Driver not found", "auth-e-02"));
+        driveService.drive(request);
         user.setDriverStatus(DriverStatus.OFF);
         userRepository.save(user);
-        return userMapper.toDriverResponse(user);
     }
 }

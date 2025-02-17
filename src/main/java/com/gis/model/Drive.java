@@ -31,6 +31,7 @@ public class Drive implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", nullable = false)
+    @JsonBackReference("drive-user")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

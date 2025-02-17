@@ -1,14 +1,13 @@
-package com.gis.dto.drive;
+package com.gis.dto.price;
 
-import com.gis.model.Car;
-import com.gis.model.User;
+import com.gis.model.VehicleType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DriveResponse {
-    User user;
-    Car car;
+public class PriceRequest {
+    Double kilometer;
+    VehicleType vehicleType;
 }

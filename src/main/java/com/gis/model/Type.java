@@ -1,5 +1,6 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,7 @@ public class Type implements Serializable {
     private Long point;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "type", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Customer> customers = new ArrayList<>();
 
     public Type(String name, Double reducedRate, Long point) {

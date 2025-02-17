@@ -1,5 +1,6 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gis.enums.DriverStatus;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
@@ -68,9 +69,11 @@ public class User implements Serializable {
     private ERole role;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
+    @JsonManagedReference("drive-user")
     private List<Drive> drives = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
+    @JsonManagedReference("booking-user")
     private List<Booking> bookings = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")

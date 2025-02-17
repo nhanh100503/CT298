@@ -33,6 +33,9 @@ public class Car implements Serializable {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    private Boolean status = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_type_id", nullable = false)
     private VehicleType vehicleType;
