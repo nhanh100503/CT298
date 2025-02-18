@@ -1,5 +1,6 @@
 package com.gis.dto.auth;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -9,5 +10,7 @@ import lombok.experimental.FieldDefaults;
 
 public class AuthCustomerLoginRequest {
     String email;
+
+    @NotBlank(message = "Mật khẩu không được để trống")
     String password;
 }

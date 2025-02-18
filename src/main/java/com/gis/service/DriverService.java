@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DriverService {
@@ -38,9 +41,20 @@ public class DriverService {
                 .role(ERole.DRIVER)
                 .status(UserStatus.ACTIVE)
                 .username(request.getUsername())
+                .star(0.0)
                 .password(hashedPassword)
                 .build();
         userRepository.save(user);
         return userMapper.toDriverResponse(user);
+    }
+
+    public List<DriverResponse> getAllDriversFree(){
+        List<User> users = userRepository.findByRoleAndDriverStatus(ERole.DRIVER, DriverStatus.FREE);
+        return userMapper.toDriverResponseList(users);
+    }
+
+    public List<DriverResponse> getAllDriversNotOffAndInactive(){
+        List<User> users = userRepository.findByDriverStatusNotIn(Arrays.asList(DriverStatus.OFF, DriverStatus.INACTIVE));
+        return userMapper.toDriverResponseList(users);
     }
 }

@@ -26,6 +26,7 @@ public class DriverResponse {
     String username;
     Boolean gender;
     String avatar;
+    Double star;
     LocalDateTime time;
     Double latitude;
     Double longitude;
@@ -33,6 +34,5 @@ public class DriverResponse {
     DriverStatus driverStatus;
     UserStatus status;
     ERole role;
-    User user;
     Car car;
 }

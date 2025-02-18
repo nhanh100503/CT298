@@ -8,10 +8,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/driver")
@@ -29,4 +28,25 @@ public class DriverController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+    @GetMapping("/all-driver-free")
+    public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversFree() {
+        ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
+                .code("driver-s-02")
+                .message("Lấy danh sách tài xế hoạt động thành công")
+                .data(driverService.getAllDriversFree())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/all-driver-not-off-inactive")
+    public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversOffInactive() {
+        ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
+                .code("driver-s-03")
+                .message("Lấy danh sách tài xế thành công")
+                .data(driverService.getAllDriversNotOffAndInactive())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
 }

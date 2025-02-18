@@ -49,6 +49,8 @@ public class User implements Serializable {
 
     private String avatar;
 
+    private Double star;
+
     private LocalDateTime time;
 
     private Double latitude;

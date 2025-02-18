@@ -36,6 +36,6 @@ public class Drive implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference("driver-car")
     private Car car;
 }
