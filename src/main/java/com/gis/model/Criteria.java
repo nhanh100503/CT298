@@ -37,5 +37,4 @@ public class Criteria implements Serializable {
     public Criteria(String name) {
         this.name = name;
     }
-
 }

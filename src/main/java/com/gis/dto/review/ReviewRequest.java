@@ -14,6 +14,7 @@ public class ReviewRequest {
     @Getter
     public static class ReviewCriteria {
         private String criteriaId;
+        @Getter
         private Integer star;
     }
 }
