@@ -93,7 +93,7 @@ public class ReviewService {
         }
 
         reviewRepository.saveAll(reviews);
-        detailReviewRepository.saveAll(detailReviews);
+//        detailReviewRepository.saveAll(detailReviews);
 
         // 🟢 Cập nhật trung bình sao của User
         updateUserStar(user, reviews);
