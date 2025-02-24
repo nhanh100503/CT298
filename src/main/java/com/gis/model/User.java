@@ -1,5 +1,6 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gis.enums.DriverStatus;
 import com.gis.enums.ERole;
@@ -20,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements Serializable {
 
     @Serial
@@ -79,5 +81,6 @@ public class User implements Serializable {
     private List<Booking> bookings = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
+    @JsonManagedReference("detailReview-user")
     private List<DetailReview> detailReviews = new ArrayList<>();
 }

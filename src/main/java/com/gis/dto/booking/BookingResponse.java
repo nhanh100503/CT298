@@ -1,5 +1,6 @@
 package com.gis.dto.booking;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gis.model.Customer;
 import com.gis.model.User;
 import lombok.AccessLevel;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BookingResponse {
     String id;
     Double kilometer;

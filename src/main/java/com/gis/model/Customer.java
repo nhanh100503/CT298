@@ -1,6 +1,7 @@
 package com.gis.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Customer implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

@@ -1,5 +1,6 @@
 package com.gis.mapper;
 
+import com.gis.dto.customer.CustomerResponse;
 import com.gis.dto.jwt.JWTPayloadDto;
 import com.gis.enums.ERole;
 import com.gis.model.Customer;
@@ -15,4 +16,6 @@ public interface CustomerMapper {
     static String roleToScope(ERole role) {
         return String.format("ROLE_%s", role.name());
     }
+
+    CustomerResponse toCustomerResponse(Customer customer);
 }

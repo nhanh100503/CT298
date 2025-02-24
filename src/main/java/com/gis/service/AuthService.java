@@ -2,6 +2,7 @@ package com.gis.service;
 
 import ch.qos.logback.classic.Logger;
 import com.gis.dto.auth.*;
+import com.gis.dto.customer.CustomerResponse;
 import com.gis.dto.jwt.JWTPayloadDto;
 import com.gis.enums.DriverStatus;
 import com.gis.enums.ERole;
@@ -207,5 +208,14 @@ public class AuthService {
         if(!user.getStatus().equals(UserStatus.ACTIVE)){
             throw new AppException(HttpStatus.BAD_REQUEST, "User is not active", "auth-e-07");
         }
+    }
+
+    public CustomerResponse getInfoCustomer(String customerId) {
+        Customer customer = customerRepository
+                .findById(customerId)
+                .orElseThrow(
+                        () -> new AppException(HttpStatus.NOT_FOUND, "User not found", "auth-e-05")
+                );
+        return customerMapper.toCustomerResponse(customer);
     }
 }

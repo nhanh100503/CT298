@@ -16,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     List<User> findByRoleAndDriverStatus(ERole role, DriverStatus driverStatus);
     List<User> findByDriverStatusNotIn(List<DriverStatus> status);
+
 }
