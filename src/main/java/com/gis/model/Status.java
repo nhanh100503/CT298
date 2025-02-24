@@ -26,10 +26,8 @@ public class Status implements Serializable {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    @Column(nullable = false)
     private Double latitude;
 
-    @Column(nullable = false)
     private Double longitude;
 
     @Enumerated(EnumType.STRING)

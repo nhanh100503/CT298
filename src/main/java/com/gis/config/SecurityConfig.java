@@ -33,7 +33,7 @@ public class SecurityConfig {
     private final JwtDecoder jwtDecoder;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
 
-    private final String[] POST_PUBLIC_ROUTES = {"/auth/**", "/", "/oauth2/**", "/driver/**"};
+    private final String[] POST_PUBLIC_ROUTES = {"/auth/**", "/", "/oauth2/**", "/driver/**", "/trace"};
     private final String[] GET_PUBLIC_ROUTES = {"/auth/**", "/", "/oauth2/**", "/driver/**"};
 
 

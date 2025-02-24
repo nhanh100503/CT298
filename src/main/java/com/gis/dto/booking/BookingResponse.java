@@ -2,6 +2,7 @@ package com.gis.dto.booking;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gis.model.Customer;
+import com.gis.model.Status;
 import com.gis.model.User;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -26,4 +27,5 @@ public class BookingResponse {
     Double price;
     Customer customer;
     User user;
+    Status status;
 }

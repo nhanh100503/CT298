@@ -24,7 +24,7 @@ import java.util.List;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-//    @Override
+    //    @Override
 //    public void configureMessageBroker(MessageBrokerRegistry registry) {
 //        registry.enableSimpleBroker("/user"); // Kênh gửi thông báo riêng cho từng user
 //        registry.setApplicationDestinationPrefixes("/app"); // Prefix cho yêu cầu từ client
