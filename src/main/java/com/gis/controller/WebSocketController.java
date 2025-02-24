@@ -18,17 +18,7 @@ public class WebSocketController {
     @MessageMapping("/booking")
     public void handleBookingRequest(@Payload BookingRequest request) {
         System.out.println("Nhận JSON từ client: " + request);
-
-        // Gọi service để xử lý booking
-        BookingResponse response = bookingService.booking(request);
-
-        // Gửi thông báo tới driver qua WebSocket
-        String driverId = request.getUser().getId();
-        if (driverId != null && !driverId.isEmpty()) {
-            System.out.println("Gửi thông báo tới: /user/" + driverId + "/ride-request");
-            messagingTemplate.convertAndSendToUser(driverId, "/ride-request", response);
-        } else {
-            System.out.println("Driver ID không hợp lệ");
-        }
+        // Chỉ gọi service, không gửi thông báo nữa
+        bookingService.booking(request);
     }
 }
