@@ -5,6 +5,7 @@ import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
 import com.gis.model.Car;
 import com.gis.model.User;
+import com.gis.model.VehicleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,4 +36,5 @@ public class DriverResponse {
     UserStatus status;
     ERole role;
     Car car;
+    VehicleType vehicleType;
 }

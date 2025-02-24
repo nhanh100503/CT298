@@ -37,7 +37,7 @@ public class Car implements Serializable {
     @Column(nullable = false)
     private Boolean status = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vehicle_type_id", nullable = false)
     @JsonBackReference("vehicleType-car")
     private VehicleType vehicleType;

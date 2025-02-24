@@ -23,7 +23,8 @@ public interface UserMapper {
     UserCreateAccountResponse toUserCreateAccountResponse(User user);
 
     @Mapping(target = "car", expression = "java(user.getDrives().isEmpty() ? null : user.getDrives().get(0).getCar())")
-    @Mapping(target = "star", source = "star", defaultValue = "0.0")// Lấy xe từ drive đầu tiên
+    @Mapping(target = "vehicleType", expression = "java(user.getDrives().isEmpty() ? null : user.getDrives().get(0).getCar().getVehicleType())") // ✅ Lấy vehicleType từ car
+    @Mapping(target = "star", source = "star", defaultValue = "0.0")
     DriverResponse toDriverResponse(User user);
 
     List<DriverResponse> toDriverResponseList(List<User> users);
