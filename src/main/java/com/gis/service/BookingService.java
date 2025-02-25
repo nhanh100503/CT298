@@ -107,4 +107,10 @@ public class BookingService {
         }
         return bookingResponse;
     }
+
+    public BookingResponse getBooking(String bookingId){
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
+        return bookingMapper.toBookingResponse(booking);
+    }
 }

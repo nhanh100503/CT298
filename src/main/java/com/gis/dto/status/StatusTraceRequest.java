@@ -9,8 +9,9 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class StatusRequest {
+public class StatusTraceRequest {
     Double latitude;
     Double longitude;
     Booking booking;
+    BookingStatus status;
 }

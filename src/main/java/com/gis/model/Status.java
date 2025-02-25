@@ -1,5 +1,6 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gis.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,5 +37,6 @@ public class Status implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
+    @JsonBackReference("booking-status")
     private Booking booking;
 }

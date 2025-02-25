@@ -1,7 +1,8 @@
 package com.gis.service;
 
-import com.gis.dto.status.StatusRequest;
 import com.gis.dto.status.StatusResponse;
+import com.gis.dto.status.StatusTraceRequest;
+import com.gis.dto.status.StatusUpdateRequest;
 import com.gis.enums.BookingStatus;
 import com.gis.exception.AppException;
 import com.gis.mapper.StatusMapper;
@@ -9,6 +10,7 @@ import com.gis.model.Booking;
 import com.gis.model.Status;
 import com.gis.repository.BookingRepository;
 import com.gis.repository.StatusRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class StatusService {
     private final BookingRepository bookingRepository;
     private final StatusMapper statusMapper;
 
-    public StatusResponse trace(StatusRequest request) {
+    public StatusResponse updateStatus(StatusUpdateRequest request) {
         Booking booking = bookingRepository.findById(request.getBooking().getId())
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
 
@@ -50,4 +52,17 @@ public class StatusService {
         return statusMapper.toStatusResponse(status);
     }
 
+    public StatusResponse trace(StatusTraceRequest request) {
+        Booking booking = bookingRepository.findById(request.getBooking().getId())
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
+        Status status = Status.builder()
+                .time(LocalDateTime.now())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .booking(booking)
+                .bookingStatus(request.getStatus())
+                .build();
+        statusRepository.save(status);
+        return statusMapper.toStatusResponse(status);
+    }
 }

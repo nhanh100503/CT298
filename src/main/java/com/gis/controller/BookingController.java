@@ -9,13 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/booking")
 @RequiredArgsConstructor
 
 public class BookingController {
@@ -28,6 +25,17 @@ public class BookingController {
                 .code("booking-s-01")
                 .data(bookingService.booking(request))
                 .message("Đặt xe thành công")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/detail/{bookingId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('CUSTOMER')")
+    public ResponseEntity<ApiResponse<BookingResponse>> getBooking(@PathVariable("bookingId") String bookingId) {
+        ApiResponse<BookingResponse> apiResponse = ApiResponse.<BookingResponse>builder()
+                .code("booking-s-02")
+                .data(bookingService.getBooking(bookingId))
+                .message("Lấy thông tin chuyến xe thành công")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }

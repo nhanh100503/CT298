@@ -1,6 +1,7 @@
 package com.gis.dto.customer;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gis.dto.type.TypeResponse;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
 import com.gis.model.Type;
@@ -25,6 +26,6 @@ public class CustomerResponse {
     Long total;
     UserStatus status;
     ERole role;
-    Type type;
+    TypeResponse type;
     Boolean isOutside;
 }

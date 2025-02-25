@@ -57,7 +57,7 @@ public class Customer implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference("customer-type")
     private Type type;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "customer")

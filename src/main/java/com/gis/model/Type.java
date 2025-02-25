@@ -34,7 +34,7 @@ public class Type implements Serializable {
     private Long point;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "type", orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference("customer-type")
     private List<Customer> customers = new ArrayList<>();
 
     public Type(String name, Double reducedRate, Long point) {
