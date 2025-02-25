@@ -27,6 +27,7 @@ public class CarService {
                 .image(request.getImage())
                 .description(request.getDescription())
                 .vehicleType(vehicleType)
+                .status(true)
                 .build();
         carRepository.save(car);
         return carMapper.carToCarResponse(car);

@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface PriceRepository extends JpaRepository<Price, String> {
     List<Price> findByVehicleType(VehicleType vehicleType);
-
 }

@@ -33,8 +33,8 @@ public class SecurityConfig {
     private final JwtDecoder jwtDecoder;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
 
-    private final String[] POST_PUBLIC_ROUTES = {"/auth/**", "/", "/oauth2/**", "/driver/register"};
-    private final String[] GET_PUBLIC_ROUTES = {"/auth/**", "/", "/oauth2/**"};
+    private final String[] POST_PUBLIC_ROUTES = {"/auth/**", "/", "/oauth2/**", "/driver/**", "/status/**"};
+    private final String[] GET_PUBLIC_ROUTES = {"/auth/**", "/", "/oauth2/**", "/driver/**"};
 
 
     @Bean
@@ -81,6 +81,7 @@ public class SecurityConfig {
                         .requestMatchers(("/js/**")).permitAll()
                         .requestMatchers(("/json/**")).permitAll()
                         .requestMatchers(("/images/**")).permitAll()
+                        .requestMatchers("/ws").permitAll()
                         .anyRequest().authenticated()
                 );
 

@@ -35,6 +35,7 @@ public class VehicleType implements Serializable {
     private List<Price> price = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "vehicleType")
+    @JsonManagedReference("vehicleType-car")
     private List<Car> cars = new ArrayList<>();
 
     public VehicleType(String model, Integer seat) {

@@ -3,6 +3,8 @@ package com.gis.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gis.dto.ApiResponse;
 import com.gis.dto.auth.*;
+import com.gis.dto.customer.CustomerResponse;
+import com.gis.security.SecurityUtil;
 import com.gis.service.AuthService;
 import com.gis.service.EmailService;
 import com.gis.service.redis.VerificationCodeForgotService;
@@ -29,6 +31,7 @@ public class AuthController {
     private final EmailService emailService;
     private final VerificationCodeService verificationCodeService;
     private final VerificationCodeForgotService verificationCodeForgotService;
+    private final SecurityUtil securityUtil;
 
     //   Customer đăng ký tài khoản
     @PostMapping("/register")
@@ -122,6 +125,17 @@ public class AuthController {
                 .data(authResponse)
                 .code("auth-s-04")
                 .message("Refresh new access token successfully")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/info-customer")
+    public ResponseEntity<ApiResponse<CustomerResponse>> getInfoCustomer(){
+        String customerId = securityUtil.getCurrentUserId();
+        ApiResponse<CustomerResponse> apiResponse =  ApiResponse.<CustomerResponse>builder()
+                .data(authService.getInfoCustomer(customerId))
+                .code("auth-s-10")
+                .message("Get user info successfully")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
