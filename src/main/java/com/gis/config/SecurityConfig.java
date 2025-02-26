@@ -52,7 +52,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Cho phép tất cả các nguồn
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
 
         // Cho phép tất cả các phương thức HTTP
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -81,7 +81,7 @@ public class SecurityConfig {
                         .requestMatchers(("/js/**")).permitAll()
                         .requestMatchers(("/json/**")).permitAll()
                         .requestMatchers(("/images/**")).permitAll()
-                        .requestMatchers("/ws").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
