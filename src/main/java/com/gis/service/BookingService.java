@@ -82,6 +82,11 @@ public class BookingService {
                 .build();
         bookingRepository.save(booking);
 
+        if (request.getAccumulatedDiscount() > 0) {
+            customer.setAccumulate((long) (customer.getAccumulate() - booking.getAccumulatedDiscount()));
+        }
+        customerRepository.save(customer);
+
         Status status = Status.builder()
                 .booking(booking)
                 .bookingStatus(BookingStatus.SUCCESS)
