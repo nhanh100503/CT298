@@ -32,5 +32,6 @@ public class DetailReview implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "criteria_id", nullable = false)
+    @JsonBackReference("detailReview-criteria")
     private Criteria criteria;
 }

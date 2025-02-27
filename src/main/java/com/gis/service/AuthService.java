@@ -211,20 +211,14 @@ public class AuthService {
     }
 
     public CustomerResponse getInfoCustomer(String customerId) {
-        Customer customer = customerRepository
-                .findById(customerId)
-                .orElseThrow(
-                        () -> new AppException(HttpStatus.NOT_FOUND, "Customer not found", "auth-e-05")
-                );
+        Customer customer = customerRepository.findById(customerId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Customer not found", "auth-e-05"));
         return customerMapper.toCustomerResponse(customer);
     }
 
     public DriverResponse getInfoUser(String userId) {
-        User user = userRepository
-                .findById(userId)
-                .orElseThrow(
-                        () -> new AppException(HttpStatus.NOT_FOUND, "User not found", "auth-e-05")
-                );
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "User not found", "auth-e-05"));
         return userMapper.toDriverResponse(user);
     }
 }

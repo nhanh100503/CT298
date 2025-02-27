@@ -3,6 +3,7 @@ package com.gis.controller;
 import com.gis.dto.ApiResponse;
 import com.gis.dto.driver.DriverRegisterRequest;
 import com.gis.dto.driver.DriverResponse;
+import com.gis.dto.driver.DriverUpdateLocationRequest;
 import com.gis.service.DriverService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,17 @@ public class DriverController {
                 .code("driver-s-03")
                 .message("Lấy danh sách tài xế thành công")
                 .data(driverService.getAllDriversNotOffAndInactive())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @PutMapping("/update-location/{driverId}")
+    public ResponseEntity<ApiResponse<DriverResponse>> updateLocation(@PathVariable("driverId") String driverId,
+                                                                            @Valid @RequestBody DriverUpdateLocationRequest request) {
+        ApiResponse<DriverResponse> apiResponse = ApiResponse.<DriverResponse>builder()
+                .code("driver-s-04")
+                .message("Cập nhật vị trí tài xế thành công")
+                .data(driverService.updateLocation(driverId, request))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }

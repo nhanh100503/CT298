@@ -82,6 +82,7 @@ public class SecurityConfig {
                         .requestMatchers(("/json/**")).permitAll()
                         .requestMatchers(("/images/**")).permitAll()
                         .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/driver/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
