@@ -61,4 +61,13 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @GetMapping("/detail/{driverId}")
+    public ResponseEntity<ApiResponse<DriverResponse>> getDriver(@PathVariable("driverId") String driverId) {
+        ApiResponse<DriverResponse> apiResponse = ApiResponse.<DriverResponse>builder()
+                .code("driver-s-04")
+                .message("Lấy thông tin tài xế thành công")
+                .data(driverService.getDriver(driverId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }

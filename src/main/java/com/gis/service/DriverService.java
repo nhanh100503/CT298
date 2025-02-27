@@ -66,4 +66,10 @@ public class DriverService {
         driver.setLongitude(request.getLongitude());
         return userMapper.toDriverResponse(driver);
     }
+
+    public DriverResponse getDriver(String driverId){
+        User driver = userRepository.findById(driverId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Driver not found", "driver-e-02"));
+        return userMapper.toDriverResponse(driver);
+    }
 }

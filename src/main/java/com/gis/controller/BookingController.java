@@ -30,7 +30,7 @@ public class BookingController {
     }
 
     @GetMapping("/detail/{bookingId}")
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<BookingResponse>> getBooking(@PathVariable("bookingId") String bookingId) {
         ApiResponse<BookingResponse> apiResponse = ApiResponse.<BookingResponse>builder()
                 .code("booking-s-02")
