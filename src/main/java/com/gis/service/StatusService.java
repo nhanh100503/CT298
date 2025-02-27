@@ -15,9 +15,9 @@ import com.gis.repository.BookingRepository;
 import com.gis.repository.CustomerRepository;
 import com.gis.repository.StatusRepository;
 import com.gis.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,6 +31,8 @@ public class StatusService {
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final StatusMapper statusMapper;
+    private final SimpMessagingTemplate messagingTemplate;
+
 
     public StatusResponse updateStatus(StatusUpdateRequest request) {
         Booking booking = bookingRepository.findById(request.getBooking().getId())
@@ -59,6 +61,7 @@ public class StatusService {
         if(lastStatus == BookingStatus.SUCCESS && currentStatus == BookingStatus.PICKING) {
             user.setDriverStatus(DriverStatus.BUSY);
             userRepository.save(user);
+            messagingTemplate.convertAndSendToUser(user.getId() ,"/confirm-status", status);
         }
         if (lastStatus == BookingStatus.TRANSPORTING && currentStatus == BookingStatus.FINISH) {
             long pointsEarned = (long) (booking.getPrice() / 100);
