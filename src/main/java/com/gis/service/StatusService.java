@@ -72,6 +72,7 @@ public class StatusService {
             user.setLatitude(booking.getDestinationX());
             user.setLongitude(booking.getDestinationY());
             userRepository.save(user);
+            messagingTemplate.convertAndSendToUser(user.getId() ,"/review-status", status);
         }
         return statusMapper.toStatusResponse(status);
     }
