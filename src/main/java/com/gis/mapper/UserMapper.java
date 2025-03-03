@@ -25,6 +25,7 @@ public interface UserMapper {
     @Mapping(target = "car", expression = "java(user.getDrives().isEmpty() ? null : user.getDrives().get(0).getCar())")
     @Mapping(target = "vehicleType", expression = "java(user.getDrives().isEmpty() ? null : user.getDrives().get(0).getCar().getVehicleType())") // ✅ Lấy vehicleType từ car
     @Mapping(target = "star", source = "star", defaultValue = "0.0")
+    @Mapping(target = "detailReview", source = "detailReviews")
     DriverResponse toDriverResponse(User user);
 
     List<DriverResponse> toDriverResponseList(List<User> users);

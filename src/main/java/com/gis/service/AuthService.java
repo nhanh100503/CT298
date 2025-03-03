@@ -1,8 +1,8 @@
 package com.gis.service;
 
-import ch.qos.logback.classic.Logger;
 import com.gis.dto.auth.*;
 import com.gis.dto.customer.CustomerResponse;
+import com.gis.dto.driver.DriverResponse;
 import com.gis.dto.jwt.JWTPayloadDto;
 import com.gis.enums.DriverStatus;
 import com.gis.enums.ERole;
@@ -211,11 +211,14 @@ public class AuthService {
     }
 
     public CustomerResponse getInfoCustomer(String customerId) {
-        Customer customer = customerRepository
-                .findById(customerId)
-                .orElseThrow(
-                        () -> new AppException(HttpStatus.NOT_FOUND, "User not found", "auth-e-05")
-                );
+        Customer customer = customerRepository.findById(customerId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Customer not found", "auth-e-05"));
         return customerMapper.toCustomerResponse(customer);
+    }
+
+    public DriverResponse getInfoUser(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "User not found", "auth-e-05"));
+        return userMapper.toDriverResponse(user);
     }
 }

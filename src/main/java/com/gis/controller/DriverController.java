@@ -3,6 +3,7 @@ package com.gis.controller;
 import com.gis.dto.ApiResponse;
 import com.gis.dto.driver.DriverRegisterRequest;
 import com.gis.dto.driver.DriverResponse;
+import com.gis.dto.driver.DriverUpdateLocationRequest;
 import com.gis.service.DriverService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,4 +50,24 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @PutMapping("/update-location/{driverId}")
+    public ResponseEntity<ApiResponse<DriverResponse>> updateLocation(@PathVariable("driverId") String driverId,
+                                                                            @Valid @RequestBody DriverUpdateLocationRequest request) {
+        ApiResponse<DriverResponse> apiResponse = ApiResponse.<DriverResponse>builder()
+                .code("driver-s-04")
+                .message("Cập nhật vị trí tài xế thành công")
+                .data(driverService.updateLocation(driverId, request))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/detail/{driverId}")
+    public ResponseEntity<ApiResponse<DriverResponse>> getDriver(@PathVariable("driverId") String driverId) {
+        ApiResponse<DriverResponse> apiResponse = ApiResponse.<DriverResponse>builder()
+                .code("driver-s-04")
+                .message("Lấy thông tin tài xế thành công")
+                .data(driverService.getDriver(driverId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }

@@ -2,6 +2,7 @@ package com.gis.service;
 
 import com.gis.dto.driver.DriverRegisterRequest;
 import com.gis.dto.driver.DriverResponse;
+import com.gis.dto.driver.DriverUpdateLocationRequest;
 import com.gis.enums.DriverStatus;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
@@ -56,5 +57,19 @@ public class DriverService {
     public List<DriverResponse> getAllDriversNotOffAndInactive(){
         List<User> users = userRepository.findByDriverStatusNotIn(Arrays.asList(DriverStatus.OFF, DriverStatus.INACTIVE));
         return userMapper.toDriverResponseList(users);
+    }
+
+    public DriverResponse updateLocation(String driverId, DriverUpdateLocationRequest request){
+        User driver = userRepository.findById(driverId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Driver not found", "driver-e-02"));
+        driver.setLatitude(request.getLatitude());
+        driver.setLongitude(request.getLongitude());
+        return userMapper.toDriverResponse(driver);
+    }
+
+    public DriverResponse getDriver(String driverId){
+        User driver = userRepository.findById(driverId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Driver not found", "driver-e-02"));
+        return userMapper.toDriverResponse(driver);
     }
 }

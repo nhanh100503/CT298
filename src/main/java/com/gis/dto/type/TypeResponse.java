@@ -14,5 +14,4 @@ public class TypeResponse {
     String name;
     Double reducedRate;
     Long point;
-    
 }

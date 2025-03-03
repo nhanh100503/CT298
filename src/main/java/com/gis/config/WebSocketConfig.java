@@ -34,21 +34,21 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/queue", "/topic", "/user"); // Thêm "/user"
         registry.setApplicationDestinationPrefixes("/app");
-        registry.setUserDestinationPrefix("/user");
+//        registry.setUserDestinationPrefix("/user");
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("*") ;// URL của ReactJS
+//                .withSockJS();
     }
 
 //    @Override
 //    public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/ws")
-//                .setAllowedOrigins("http://localhost:3000") // URL của ReactJS
-//                .withSockJS();
+//        registry.addEndpoint("/ws")  // Không dùng SockJS
+//                .setAllowedOrigins("*"); // Chấp nhận mọi nguồn kết nối
 //    }
-
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")  // Không dùng SockJS
-                .setAllowedOrigins("*"); // Chấp nhận mọi nguồn kết nối
-    }
 
 //    @Override
 //    public boolean configureMessageConverters(List<MessageConverter> messageConverters) {

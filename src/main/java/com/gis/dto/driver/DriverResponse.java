@@ -1,20 +1,19 @@
 package com.gis.dto.driver;
 
+import com.gis.dto.detail_review.DetailReviewResponse;
 import com.gis.enums.DriverStatus;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
 import com.gis.model.Car;
-import com.gis.model.User;
+import com.gis.model.DetailReview;
 import com.gis.model.VehicleType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -37,4 +36,5 @@ public class DriverResponse {
     ERole role;
     Car car;
     VehicleType vehicleType;
+    List<DetailReview> detailReview;
 }

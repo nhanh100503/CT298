@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gis.dto.ApiResponse;
 import com.gis.dto.auth.*;
 import com.gis.dto.customer.CustomerResponse;
+import com.gis.dto.driver.DriverResponse;
 import com.gis.security.SecurityUtil;
 import com.gis.service.AuthService;
 import com.gis.service.EmailService;
@@ -134,6 +135,17 @@ public class AuthController {
         String customerId = securityUtil.getCurrentUserId();
         ApiResponse<CustomerResponse> apiResponse =  ApiResponse.<CustomerResponse>builder()
                 .data(authService.getInfoCustomer(customerId))
+                .code("auth-s-10")
+                .message("Get user info successfully")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/info-user")
+    public ResponseEntity<ApiResponse<DriverResponse>> getInfoUser(){
+        String userId = securityUtil.getCurrentUserId();
+        ApiResponse<DriverResponse> apiResponse =  ApiResponse.<DriverResponse>builder()
+                .data(authService.getInfoUser(userId))
                 .code("auth-s-10")
                 .message("Get user info successfully")
                 .build();
