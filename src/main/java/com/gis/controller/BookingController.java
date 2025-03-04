@@ -39,4 +39,15 @@ public class BookingController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+    @GetMapping("/status/{bookingId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
+    public ResponseEntity<ApiResponse<BookingResponse>> getStatusBooking(@PathVariable("bookingId") String bookingId) {
+        ApiResponse<BookingResponse> apiResponse = ApiResponse.<BookingResponse>builder()
+                .code("booking-s-02")
+                .data(bookingService.getStatusBooking(bookingId))
+                .message("Lấy thông tin chuyến xe thành công")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }

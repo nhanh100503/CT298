@@ -82,4 +82,11 @@ public class BookingService {
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
         return bookingMapper.toBookingResponse(booking);
     }
+
+
+    public BookingResponse getStatusBooking(String bookingId){
+        Booking booking = bookingRepository.findBookingWithLatestStatus(bookingId)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
+        return bookingMapper.toBookingResponse(booking);
+    }
 }
