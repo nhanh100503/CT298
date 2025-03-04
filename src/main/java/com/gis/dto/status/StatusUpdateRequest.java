@@ -1,6 +1,5 @@
 package com.gis.dto.status;
 
-import com.gis.enums.BookingStatus;
 import com.gis.model.Booking;
 import lombok.AccessLevel;
 import lombok.Data;
