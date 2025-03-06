@@ -68,6 +68,7 @@ public class Customer implements Serializable {
     private List<Booking> books = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "customer")
+    @JsonManagedReference("comment-customer")
     private List<Comment> comments = new ArrayList<>();
 
     private String providerId;

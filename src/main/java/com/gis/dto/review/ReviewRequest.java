@@ -10,6 +10,7 @@ import java.util.List;
 public class ReviewRequest {
     private Booking booking;
     private List<ReviewCriteria> criteriaList;
+    private String text;
 
     @Getter
     public static class ReviewCriteria {

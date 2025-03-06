@@ -18,12 +18,13 @@ public class ReviewService {
     private final BookingRepository bookingRepository;
     private final CriteriaRepository criteriaRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final DetailReviewRepository detailReviewRepository;
 
     public ReviewResponse createReview(ReviewRequest request) {
         Booking booking = bookingRepository.findById(request.getBooking().getId())
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
-
+        Customer customer = booking.getCustomer();
         User user = booking.getUser();
         List<Review> reviews = new ArrayList<>();
         List<DetailReview> detailReviews = new ArrayList<>();
@@ -56,9 +57,17 @@ public class ReviewService {
 
         updateDetailReviewPoints(reviews);
 
+        Comment comment = Comment.builder()
+                .customer(customer)
+                .text(request.getText())
+                .booking(booking)
+                .build();
+        commentRepository.save(comment);
+
         ReviewResponse response = new ReviewResponse();
         response.setBooking(booking);
         response.setCriteriaList(request.getCriteriaList());
+        response.setText(request.getText());
         return response;
     }
 

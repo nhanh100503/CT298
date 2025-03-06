@@ -12,4 +12,5 @@ import java.util.List;
 public class ReviewResponse {
     Booking booking;
     List<ReviewRequest.ReviewCriteria> criteriaList;
+    String text;
 }
