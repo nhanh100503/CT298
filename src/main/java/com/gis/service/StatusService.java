@@ -61,18 +61,22 @@ public class StatusService {
         if(lastStatus == BookingStatus.SUCCESS && currentStatus == BookingStatus.PICKING) {
             user.setDriverStatus(DriverStatus.BUSY);
             userRepository.save(user);
-            messagingTemplate.convertAndSendToUser(user.getId() ,"/confirm-status", status);
+            messagingTemplate.convertAndSendToUser(user.getId() ,"/confirm-picking", statusMapper.toStatusResponse(status));
+        }
+        if(lastStatus == BookingStatus.PICKING && currentStatus == BookingStatus.TRANSPORTING) {
+            user.setDriverStatus(DriverStatus.BUSY);
+            userRepository.save(user);
+            messagingTemplate.convertAndSendToUser(user.getId() ,"/confirm-transporting", statusMapper.toStatusResponse(status));
         }
         if (lastStatus == BookingStatus.TRANSPORTING && currentStatus == BookingStatus.FINISH) {
             long pointsEarned = (long) (booking.getPrice() / 100);
             customer.setAccumulate(customer.getAccumulate() + pointsEarned);
             customerRepository.save(customer);
-
             user.setDriverStatus(DriverStatus.FREE);
-            user.setLatitude(booking.getDestinationX());
-            user.setLongitude(booking.getDestinationY());
+            user.setLatitude(booking.getDestinationY());
+            user.setLongitude(booking.getDestinationX());
             userRepository.save(user);
-            messagingTemplate.convertAndSendToUser(user.getId() ,"/review-status", status);
+            messagingTemplate.convertAndSendToUser(user.getId() ,"/review-status", statusMapper.toStatusResponse(status));
         }
         return statusMapper.toStatusResponse(status);
     }
