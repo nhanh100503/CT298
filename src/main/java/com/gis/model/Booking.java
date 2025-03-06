@@ -70,6 +70,7 @@ public class Booking implements Serializable {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "booking")
+    @JsonManagedReference("comment-booking")
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "booking")
