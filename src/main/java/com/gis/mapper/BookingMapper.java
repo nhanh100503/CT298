@@ -1,5 +1,6 @@
 package com.gis.mapper;
 
+import com.gis.dto.booking.BookingDetailResponse;
 import com.gis.dto.booking.BookingResponse;
 import com.gis.model.Booking;
 import org.mapstruct.Mapper;
@@ -9,5 +10,8 @@ import org.mapstruct.Mapping;
 public interface BookingMapper {
     @Mapping(target = "status", expression = "java(booking.getStatuses() != null && !booking.getStatuses().isEmpty() ? booking.getStatuses().get(0) : null)")
     BookingResponse toBookingResponse(Booking booking);
+
+    @Mapping(source = "statuses", target = "statuses")
+    BookingDetailResponse toBookingDetailResponse(Booking booking);
 }
 

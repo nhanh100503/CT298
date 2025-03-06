@@ -1,6 +1,7 @@
 package com.gis.controller;
 
 import com.gis.dto.ApiResponse;
+import com.gis.dto.booking.BookingDetailResponse;
 import com.gis.dto.booking.BookingRequest;
 import com.gis.dto.booking.BookingResponse;
 import com.gis.service.BookingService;
@@ -31,8 +32,8 @@ public class BookingController {
 
     @GetMapping("/detail/{bookingId}")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
-    public ResponseEntity<ApiResponse<BookingResponse>> getBooking(@PathVariable("bookingId") String bookingId) {
-        ApiResponse<BookingResponse> apiResponse = ApiResponse.<BookingResponse>builder()
+    public ResponseEntity<ApiResponse<BookingDetailResponse>> getBooking(@PathVariable("bookingId") String bookingId) {
+        ApiResponse<BookingDetailResponse> apiResponse = ApiResponse.<BookingDetailResponse>builder()
                 .code("booking-s-02")
                 .data(bookingService.getBooking(bookingId))
                 .message("Lấy thông tin chuyến xe thành công")

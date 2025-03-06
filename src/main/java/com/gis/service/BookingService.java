@@ -1,5 +1,6 @@
 package com.gis.service;
 
+import com.gis.dto.booking.BookingDetailResponse;
 import com.gis.dto.booking.BookingRequest;
 import com.gis.dto.booking.BookingResponse;
 import com.gis.enums.BookingStatus;
@@ -77,10 +78,10 @@ public class BookingService {
         return bookingResponse;
     }
 
-    public BookingResponse getBooking(String bookingId){
+    public BookingDetailResponse getBooking(String bookingId){
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
-        return bookingMapper.toBookingResponse(booking);
+        return bookingMapper.toBookingDetailResponse(booking);
     }
 
 
