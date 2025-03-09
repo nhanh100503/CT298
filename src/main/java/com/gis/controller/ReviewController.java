@@ -1,5 +1,6 @@
 package com.gis.controller;
 import com.gis.dto.ApiResponse;
+import com.gis.dto.detail_review.DetailReviewResponse;
 import com.gis.dto.review.ReviewRequest;
 import com.gis.dto.review.ReviewResponse;
 import com.gis.service.ReviewService;
@@ -8,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -31,4 +31,19 @@ public class ReviewController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+    @GetMapping("/driver/{driverId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
+    public ResponseEntity<ApiResponse<List<DetailReviewResponse>>> getDetailReviewsByDriverId(@PathVariable String driverId) {
+        List<DetailReviewResponse> detailReviews = reviewService.getDetailReviewsByDriverId(driverId);
+
+        ApiResponse<List<DetailReviewResponse>> apiResponse = ApiResponse.<List<DetailReviewResponse>>builder()
+                .code("review-s-02")
+                .message("Lấy danh sách đánh giá thành công")
+                .data(detailReviews)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }

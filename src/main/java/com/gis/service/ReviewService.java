@@ -1,5 +1,6 @@
 package com.gis.service;
 
+import com.gis.dto.detail_review.DetailReviewResponse;
 import com.gis.dto.review.ReviewRequest;
 import com.gis.dto.review.ReviewResponse;
 import com.gis.exception.AppException;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -141,6 +143,18 @@ public class ReviewService {
 
         }
     }
+
+
+        public List<DetailReviewResponse> getDetailReviewsByDriverId(String driverId) {
+            List<DetailReview> detailReviews = detailReviewRepository.findAllByUserId(driverId);
+            return detailReviews.stream()
+                    .map(review -> new DetailReviewResponse(
+                            review.getId(),
+                            review.getPoint(),
+                            review.getCriteria() // Lấy nguyên đối tượng Criteria
+                    ))
+                    .collect(Collectors.toList());
+        }
 
 
 

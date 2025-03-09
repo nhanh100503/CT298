@@ -11,4 +11,11 @@ public class DetailReviewResponse {
     String id;
     Double point;
     Criteria criteria;
+    String driverId; // Thêm trường này để lấy driverId
+
+    public DetailReviewResponse(String id, Double point, Criteria criteria) {
+        this.id = id;
+        this.point = point;
+        this.criteria = criteria;
+    }
 }
