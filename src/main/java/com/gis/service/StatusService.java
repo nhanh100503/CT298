@@ -7,20 +7,16 @@ import com.gis.enums.BookingStatus;
 import com.gis.enums.DriverStatus;
 import com.gis.exception.AppException;
 import com.gis.mapper.StatusMapper;
-import com.gis.model.Booking;
-import com.gis.model.Customer;
-import com.gis.model.Status;
-import com.gis.model.User;
-import com.gis.repository.BookingRepository;
-import com.gis.repository.CustomerRepository;
-import com.gis.repository.StatusRepository;
-import com.gis.repository.UserRepository;
+import com.gis.model.*;
+import com.gis.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,6 +26,7 @@ public class StatusService {
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
+    private final TypeRepository typeRepository;
     private final StatusMapper statusMapper;
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -71,7 +68,12 @@ public class StatusService {
         if (lastStatus == BookingStatus.TRANSPORTING && currentStatus == BookingStatus.FINISH) {
             long pointsEarned = (long) (booking.getPrice() / 100);
             customer.setAccumulate(customer.getAccumulate() + pointsEarned);
+            customer.setTotal(customer.getTotal() + pointsEarned);
+
+            updateCustomerType(customer);
+
             customerRepository.save(customer);
+
             user.setDriverStatus(DriverStatus.FREE);
             user.setLatitude(booking.getDestinationY());
             user.setLongitude(booking.getDestinationX());
@@ -79,6 +81,27 @@ public class StatusService {
             messagingTemplate.convertAndSendToUser(user.getId() ,"/review-status", statusMapper.toStatusResponse(status));
         }
         return statusMapper.toStatusResponse(status);
+    }
+
+    private void updateCustomerType(Customer customer) {
+        // Lấy tất cả Type từ DB, sắp xếp theo point tăng dần
+        List<Type> types = typeRepository.findAll();
+        types.sort(Comparator.comparingLong(Type::getPoint));
+
+        // Tìm Type có point cao nhất mà total của customer thỏa mãn
+        Type newType = null;
+        for (Type type : types) {
+            if (customer.getTotal() >= type.getPoint()) {
+                newType = type; // Cập nhật type nếu total >= point
+            } else {
+                break; // Thoát vòng lặp vì types đã được sắp xếp theo point tăng dần
+            }
+        }
+
+        // Nếu tìm thấy Type mới và nó khác với Type hiện tại, cập nhật
+        if (newType != null && !newType.getId().equals(customer.getType().getId())) {
+            customer.setType(newType);
+        }
     }
 
 
