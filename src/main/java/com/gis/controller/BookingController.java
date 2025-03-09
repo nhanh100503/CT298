@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/booking")
 @RequiredArgsConstructor
@@ -48,6 +50,28 @@ public class BookingController {
                 .code("booking-s-02")
                 .data(bookingService.getStatusBooking(bookingId))
                 .message("Lấy thông tin chuyến xe thành công")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/all-customer/{customerId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
+    public ResponseEntity<ApiResponse<List<BookingDetailResponse>>> getAllBookingByCustomer(@PathVariable("customerId") String customerId){
+        ApiResponse<List<BookingDetailResponse>> apiResponse = ApiResponse.<List<BookingDetailResponse>>builder()
+                .code("booking-s-10")
+                .message("Lấy danh sách chuyến xe của khách hàng thành công")
+                .data(bookingService.getAllBookingByCustomer(customerId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/all-user/{userId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
+    public ResponseEntity<ApiResponse<List<BookingDetailResponse>>> getAllBookingByUser(@PathVariable("userId") String userId){
+        ApiResponse<List<BookingDetailResponse>> apiResponse = ApiResponse.<List<BookingDetailResponse>>builder()
+                .code("booking-s-10")
+                .message("Lấy danh sách chuyến xe của tài xế thành công")
+                .data(bookingService.getAllBookingByUser(userId))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }

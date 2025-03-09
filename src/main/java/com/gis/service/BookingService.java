@@ -20,6 +20,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -89,5 +90,15 @@ public class BookingService {
         Booking booking = bookingRepository.findBookingWithLatestStatus(bookingId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
         return bookingMapper.toBookingResponse(booking);
+    }
+
+    public List<BookingDetailResponse> getAllBookingByCustomer(String CustomerId){
+        List<Booking> booking = bookingRepository.findBookingsByCustomerId(CustomerId);
+        return bookingMapper.toBookingDetailResponseList(booking);
+    }
+
+    public List<BookingDetailResponse> getAllBookingByUser(String userId){
+        List<Booking> booking = bookingRepository.findBookingsByUserId(userId);
+        return bookingMapper.toBookingDetailResponseList(booking);
     }
 }
