@@ -36,5 +36,5 @@ public class DriverResponse {
     ERole role;
     Car car;
     VehicleType vehicleType;
-    List<DetailReview> detailReview;
+    List<DetailReviewResponse> detailReview;
 }
