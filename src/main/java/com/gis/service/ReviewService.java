@@ -1,5 +1,8 @@
 package com.gis.service;
 
+import com.gis.dto.booking.BookingDetailResponse;
+import com.gis.dto.booking.BookingResponse;
+import com.gis.dto.review.ReviewDetailResponse;
 import com.gis.dto.review.ReviewRequest;
 import com.gis.dto.review.ReviewResponse;
 import com.gis.exception.AppException;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -127,11 +131,61 @@ public class ReviewService {
                 detailReview.setPoint(Double.valueOf(review.getStar()));
                 detailReviewRepository.save(detailReview);
             }
-
-
         }
     }
 
+    public ReviewDetailResponse getReviewResponseByBookingId(String bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
 
+        List<Review> reviews = booking.getReviews();
+        if (reviews == null || reviews.isEmpty()) {
+            return null; // Không có review
+        }
+
+        // Giả sử lấy review đầu tiên
+        Review review = reviews.get(0);
+
+        // Chuyển Booking sang BookingResponse
+        BookingDetailResponse bookingResponse = new BookingDetailResponse();
+        bookingResponse.setId(booking.getId());
+        bookingResponse.setKilometer(booking.getKilometer());
+        bookingResponse.setStartingX(booking.getStartingX());
+        bookingResponse.setStartingY(booking.getStartingY());
+        bookingResponse.setDestinationX(booking.getDestinationX());
+        bookingResponse.setDestinationY(booking.getDestinationY());
+        bookingResponse.setBookingTime(booking.getBookingTime());
+        bookingResponse.setFinishTime(booking.getFinishTime());
+        bookingResponse.setAccumulatedDiscount(booking.getAccumulatedDiscount());
+        bookingResponse.setMemberDiscount(booking.getMemberDiscount());
+        bookingResponse.setPrice(booking.getPrice());
+        bookingResponse.setCustomer(booking.getCustomer());
+        bookingResponse.setUser(booking.getUser());
+        bookingResponse.setStatuses(booking.getStatuses());
+
+        // Ánh xạ Review -> ReviewResponse
+        ReviewDetailResponse reviewResponse = new ReviewDetailResponse();
+        reviewResponse.setBooking(bookingResponse);
+
+        String text = booking.getComments().isEmpty() ? null : booking.getComments().get(0).getText();
+        reviewResponse.setText(text);
+
+        // Ánh xạ Criteria từ Review
+        // Duyệt tất cả reviews và ánh xạ criteria từ mỗi review
+        List<ReviewResponse.CriteriaResponse> criteriaList = booking.getReviews().stream()
+                .map(r -> {
+                    ReviewResponse.CriteriaResponse criteriaResponse = new ReviewResponse.CriteriaResponse();
+                    criteriaResponse.setCriteriaId(r.getCriteria().getId());
+                    criteriaResponse.setName(r.getCriteria().getName());
+                    criteriaResponse.setStar(r.getStar());
+                    return criteriaResponse;
+                })
+                .collect(Collectors.toList());
+
+        reviewResponse.setCriteriaList(criteriaList);
+
+
+        return reviewResponse;
+    }
 
 }
