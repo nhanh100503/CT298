@@ -1,6 +1,7 @@
 package com.gis.dto.review;
 
 import com.gis.model.Booking;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ public class ReviewRequest {
         private String criteriaId;
         private String name;
         @Getter
+        @Size(min = 1, max = 5, message = "Tối thiểu 1 sao, tối đa 5 sao")
         private Integer star;
     }
 }

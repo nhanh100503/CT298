@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface DetailReviewRepository extends JpaRepository<DetailReview, String> {
     @Query("SELECT COALESCE(SUM(d.point), 0) FROM DetailReview d WHERE d.criteria.id = :criteriaId")
@@ -17,4 +18,6 @@ public interface DetailReviewRepository extends JpaRepository<DetailReview, Stri
     Long getReviewCount(@Param("criteriaId") String criteriaId);
 
     List<DetailReview> findByCriteriaAndUser(Criteria criteria, User user);
+
+    List<DetailReview> findAllByUserId(String userId);
 }

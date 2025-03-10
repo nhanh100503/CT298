@@ -1,5 +1,6 @@
 package com.gis.service;
 
+import com.gis.dto.detail_review.DetailReviewResponse;
 import com.gis.dto.booking.BookingDetailResponse;
 import com.gis.dto.booking.BookingResponse;
 import com.gis.dto.review.ReviewDetailResponse;
@@ -133,10 +134,22 @@ public class ReviewService {
             }
         }
     }
+    public List<DetailReviewResponse> getDetailReviewsByDriverId(String driverId) {
+        List<DetailReview> detailReviews = detailReviewRepository.findAllByUserId(driverId);
+        return detailReviews.stream()
+                .map(review -> new DetailReviewResponse(
+                        review.getId(),
+                        review.getPoint(),
+                        review.getCriteria() // Lấy nguyên đối tượng Criteria
+                ))
+                .collect(Collectors.toList());
+    }
 
     public ReviewDetailResponse getReviewResponseByBookingId(String bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
+
+
 
         List<Review> reviews = booking.getReviews();
         if (reviews == null || reviews.isEmpty()) {
