@@ -135,16 +135,16 @@ public class ReviewService {
     }
 
 
-        public List<DetailReviewResponse> getDetailReviewsByDriverId(String driverId) {
-            List<DetailReview> detailReviews = detailReviewRepository.findAllByUserId(driverId);
-            return detailReviews.stream()
-                    .map(review -> new DetailReviewResponse(
-                            review.getId(),
-                            review.getPoint(),
-                            review.getCriteria() // Lấy nguyên đối tượng Criteria
-                    ))
-                    .collect(Collectors.toList());
-        }
+    public List<DetailReviewResponse> getDetailReviewsByDriverId(String driverId) {
+        List<DetailReview> detailReviews = detailReviewRepository.findAllByUserId(driverId);
+        return detailReviews.stream()
+                .map(review -> new DetailReviewResponse(
+                        review.getId(),
+                        review.getPoint(),
+                        review.getCriteria() // Lấy nguyên đối tượng Criteria
+                ))
+                .collect(Collectors.toList());
+    }
 
 
 
