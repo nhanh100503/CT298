@@ -75,4 +75,15 @@ public class BookingController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+    @GetMapping("/detail-driver/{driverId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
+    public ResponseEntity<ApiResponse<BookingDetailResponse>> getBookingByDriverId(@PathVariable("driverId") String driverId){
+        ApiResponse<BookingDetailResponse> apiResponse = ApiResponse.<BookingDetailResponse>builder()
+                .code("booking-s-10")
+                .message("Lấy danh sách chuyến xe của tài xế thành công")
+                .data(bookingService.getBookingByDriverId(driverId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }

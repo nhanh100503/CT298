@@ -101,4 +101,10 @@ public class BookingService {
         List<Booking> booking = bookingRepository.findBookingsByUserId(userId);
         return bookingMapper.toBookingDetailResponseList(booking);
     }
+
+    public BookingDetailResponse getBookingByDriverId(String driverId){
+        Booking booking = bookingRepository.findTopByUserIdOrderByBookingTimeDesc(driverId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "booking not found", "booking-e-02"));
+        return bookingMapper.toBookingDetailResponse(booking);
+    }
 }

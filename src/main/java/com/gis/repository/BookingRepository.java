@@ -16,4 +16,5 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     Optional<Booking> findBookingWithLatestStatus(@Param("bookingId") String bookingId);
     List<Booking> findBookingsByCustomerId(String customer_id);
     List<Booking> findBookingsByUserId(String user);
+    Optional<Booking> findTopByUserIdOrderByBookingTimeDesc(String driverId);
 }
