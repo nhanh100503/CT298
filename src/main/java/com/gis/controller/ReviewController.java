@@ -1,6 +1,7 @@
 package com.gis.controller;
 import com.gis.dto.ApiResponse;
 import com.gis.dto.detail_review.DetailReviewResponse;
+import com.gis.dto.review.ReviewDetailResponse;
 import com.gis.dto.review.ReviewRequest;
 import com.gis.dto.review.ReviewResponse;
 import com.gis.service.ReviewService;
@@ -46,4 +47,14 @@ public class ReviewController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping("/detail/{bookingId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('DRIVER') or hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<ReviewDetailResponse>> getReviewByBookingId(@PathVariable("bookingId") String bookingId) {
+        ApiResponse<ReviewDetailResponse> apiResponse = ApiResponse.<ReviewDetailResponse>builder()
+                .code("review-s-01")
+                .message("Lấy đánh giá thành công")
+                .data(reviewService.getReviewResponseByBookingId(bookingId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }

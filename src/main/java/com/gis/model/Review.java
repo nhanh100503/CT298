@@ -34,4 +34,5 @@ public class Review implements Serializable {
     @JoinColumn(name = "booking_id", nullable = false)
     @JsonBackReference("review-booking")
     private Booking booking;
+
 }
