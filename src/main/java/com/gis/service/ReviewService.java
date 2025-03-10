@@ -34,6 +34,8 @@ public class ReviewService {
         Map<Criteria, Double> totalPointsMap = new HashMap<>();
         Map<Criteria, Long> countMap = new HashMap<>();
 
+        List<ReviewResponse.CriteriaResponse> criteriaResponses = new ArrayList<>();
+
         for (ReviewRequest.ReviewCriteria criteriaData : request.getCriteriaList()) {
             Criteria criteria = criteriaRepository.findById(criteriaData.getCriteriaId())
                     .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Criteria not found", "criteria-e-02"));
@@ -51,6 +53,12 @@ public class ReviewService {
 
             totalPointsMap.put(criteria, detailReviewRepository.getTotalPoints(criteria.getId()) + criteriaData.getStar());
             countMap.put(criteria, detailReviewRepository.getReviewCount(criteria.getId()) + 1);
+
+            ReviewResponse.CriteriaResponse criteriaResponse = new ReviewResponse.CriteriaResponse();
+            criteriaResponse.setCriteriaId(criteriaData.getCriteriaId());
+            criteriaResponse.setName(criteria.getName()); // Lấy name từ Criteria trong DB
+            criteriaResponse.setStar(criteriaData.getStar());
+            criteriaResponses.add(criteriaResponse);
         }
 
         reviewRepository.saveAll(reviews);
@@ -59,16 +67,18 @@ public class ReviewService {
 
         updateDetailReviewPoints(reviews);
 
-        Comment comment = Comment.builder()
-                .customer(customer)
-                .text(request.getText())
-                .booking(booking)
-                .build();
-        commentRepository.save(comment);
+        if (request.getText() != null && !request.getText().trim().isEmpty()) {
+            Comment comment = Comment.builder()
+                    .customer(customer)
+                    .text(request.getText().trim()) // Loại bỏ khoảng trắng thừa
+                    .booking(booking)
+                    .build();
+            commentRepository.save(comment);
+        }
 
         ReviewResponse response = new ReviewResponse();
         response.setBooking(booking);
-        response.setCriteriaList(request.getCriteriaList());
+        response.setCriteriaList(criteriaResponses);
         response.setText(request.getText());
         return response;
     }
@@ -86,26 +96,6 @@ public class ReviewService {
         user.setStar(newAverageStar);
         userRepository.save(user);
     }
-
-//    private void updateDetailReviewPoints(List<Review> reviews) {
-//        for (Review review : reviews) {
-//            Criteria criteria = review.getCriteria();
-//            User user = review.getBooking().getUser();
-//
-//            List<DetailReview> detailReviews = detailReviewRepository.findByCriteriaAndUser(criteria, user);
-//
-//            double totalPoints = detailReviews.stream().mapToDouble(DetailReview::getPoint).sum() + review.getStar();
-//            long totalReviews = detailReviews.size() + 1;
-//
-//            double newAveragePoint = totalPoints / totalReviews;
-//
-//            DetailReview detailReview = new DetailReview();
-//            detailReview.setUser(user);
-//            detailReview.setCriteria(criteria);
-//            detailReview.setPoint(newAveragePoint);
-//            detailReviewRepository.save(detailReview);
-//        }
-//    }
 
     private void updateDetailReviewPoints(List<Review> reviews) {
         for (Review review : reviews) {

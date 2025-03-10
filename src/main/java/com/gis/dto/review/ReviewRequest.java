@@ -16,6 +16,7 @@ public class ReviewRequest {
     @Getter
     public static class ReviewCriteria {
         private String criteriaId;
+        private String name;
         @Getter
         @Size(min = 1, max = 5, message = "Tối thiểu 1 sao, tối đa 5 sao")
         private Integer star;

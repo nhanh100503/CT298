@@ -11,6 +11,14 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewResponse {
     Booking booking;
-    List<ReviewRequest.ReviewCriteria> criteriaList;
+    List<CriteriaResponse> criteriaList; // Sử dụng class mới
     String text;
+
+    @Data
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class CriteriaResponse {
+        String criteriaId;
+        String name; // Lấy từ Criteria trong DB
+        Integer star;
+    }
 }
