@@ -40,6 +40,16 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @GetMapping("/all-driver-busy")
+    public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversBusy() {
+        ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
+                .code("driver-s-02")
+                .message("Lấy danh sách tài xế bận thành công")
+                .data(driverService.getAllDriversBusy())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
     @GetMapping("/all-driver-not-off-inactive")
     public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversOffInactive() {
         ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
