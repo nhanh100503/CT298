@@ -74,6 +74,9 @@ public class StatusService {
 
             customerRepository.save(customer);
 
+            booking.setFinishTime(LocalDateTime.now());
+            bookingRepository.save(booking);
+
             user.setDriverStatus(DriverStatus.FREE);
             user.setLatitude(booking.getDestinationY());
             user.setLongitude(booking.getDestinationX());
@@ -84,21 +87,16 @@ public class StatusService {
     }
 
     private void updateCustomerType(Customer customer) {
-        // Lấy tất cả Type từ DB, sắp xếp theo point tăng dần
         List<Type> types = typeRepository.findAll();
         types.sort(Comparator.comparingLong(Type::getPoint));
-
-        // Tìm Type có point cao nhất mà total của customer thỏa mãn
         Type newType = null;
         for (Type type : types) {
             if (customer.getTotal() >= type.getPoint()) {
-                newType = type; // Cập nhật type nếu total >= point
+                newType = type;
             } else {
-                break; // Thoát vòng lặp vì types đã được sắp xếp theo point tăng dần
+                break;
             }
         }
-
-        // Nếu tìm thấy Type mới và nó khác với Type hiện tại, cập nhật
         if (newType != null && !newType.getId().equals(customer.getType().getId())) {
             customer.setType(newType);
         }
