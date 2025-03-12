@@ -49,6 +49,24 @@ public class DriverController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+    @GetMapping("/all-driver-inactive")
+    public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversInactive() {
+        ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
+                .code("driver-s-02")
+                .message("Lấy danh sách tài xế chờ duyệt thành công")
+                .data(driverService.getAllDriversInactive())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+    @GetMapping("/all-driver-off")
+    public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversOff() {
+        ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
+                .code("driver-s-02")
+                .message("Lấy danh sách tài xế nghỉ thành công")
+                .data(driverService.getAllDriversOff())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 
     @GetMapping("/all-driver-not-off-inactive")
     public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversOffInactive() {
@@ -80,4 +98,6 @@ public class DriverController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+
 }

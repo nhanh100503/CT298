@@ -58,7 +58,14 @@ public class DriverService {
         List<User> users = userRepository.findByRoleAndDriverStatus(ERole.DRIVER, DriverStatus.BUSY);
         return userMapper.toDriverResponseList(users);
     }
-
+    public List<DriverResponse> getAllDriversOff(){
+        List<User> users = userRepository.findByRoleAndDriverStatus(ERole.DRIVER, DriverStatus.OFF);
+        return userMapper.toDriverResponseList(users);
+    }
+    public List<DriverResponse> getAllDriversInactive(){
+        List<User> users = userRepository.findByRoleAndDriverStatus(ERole.DRIVER, DriverStatus.INACTIVE);
+        return userMapper.toDriverResponseList(users);
+    }
     public List<DriverResponse> getAllDriversNotOffAndInactive(){
         List<User> users = userRepository.findByDriverStatusNotIn(Arrays.asList(DriverStatus.OFF, DriverStatus.INACTIVE));
         return userMapper.toDriverResponseList(users);
