@@ -1,7 +1,7 @@
 package com.gis.enums;
 
 public enum DriverStatus {
-    ON,
+    INACTIVE,
     OFF,
     FREE,
     BUSY

@@ -1,4 +1,4 @@
-package com.gis.dto.auth;
+package com.gis.dto.criteria;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -6,10 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
-public class AuthRegisterCustomerRequest {
+public class CriteriaResponse {
+    String id;
     String name;
-    String email;
-    String phone;
-    String password;
 }

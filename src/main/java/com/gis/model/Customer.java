@@ -1,5 +1,8 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gis.enums.ERole;
 import com.gis.enums.UserStatus;
 import jakarta.persistence.*;
@@ -17,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Customer implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,7 +32,6 @@ public class Customer implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String phone;
 
     @Column(nullable = false)
@@ -38,8 +41,10 @@ public class Customer implements Serializable {
 
     private String avatar;
 
+    @Column(nullable = false)
     private Long accumulate;
 
+    @Column(nullable = false)
     private Long total;
 
     @Enumerated(EnumType.STRING)
@@ -52,15 +57,18 @@ public class Customer implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
+    @JsonBackReference("customer-type")
     private Type type;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "customer")
     private List<Address> addresses = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "customer")
+    @JsonManagedReference
     private List<Booking> books = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "customer")
+    @JsonManagedReference("comment-customer")
     private List<Comment> comments = new ArrayList<>();
 
     private String providerId;

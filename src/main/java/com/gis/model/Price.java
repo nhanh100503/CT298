@@ -1,5 +1,6 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,10 +33,12 @@ public class Price implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "freight_rate_id", nullable = false)
+    @JsonBackReference
     private FreightRate freightRate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_type_id", nullable = false)
+    @JsonBackReference("vehicleType-price")
     private VehicleType vehicleType;
 
     public Price(LocalDateTime time, Double price, FreightRate freightRate, VehicleType vehicleType) {

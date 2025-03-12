@@ -1,5 +1,7 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
 public class DetailReview implements Serializable {
     @Serial
@@ -26,9 +29,11 @@ public class DetailReview implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", nullable = false)
+    @JsonBackReference("detailReview-user")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "criteria_id", nullable = false)
+    @JsonBackReference("detailReview-criteria")
     private Criteria criteria;
 }

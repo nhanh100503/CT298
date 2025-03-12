@@ -13,37 +13,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Date;
 
+@Component
 public abstract class BaseJWTUtil {
     protected abstract String getSecret();
     protected abstract long getExpiration();
 
     protected byte[] getSecretKey() {
         return Base64URL.encode(getSecret().getBytes()).decode();
-    }
-
-    public String generateTokenUser(JWTPayloadDto payload) {
-        try {
-            JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-            JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(payload.getId())
-                    .issuer("ct298-gis.com")
-                    .issueTime(new Date())
-                    .expirationTime(new Date(System.currentTimeMillis() + getExpiration()))
-                    .claim("id", payload.getId())
-                    .claim("email", payload.getEmail())
-                    .claim("scope", payload.getScope())
-                    .build();
-            Payload jwtPayload = new Payload(claimsSet.toJSONObject());
-            JWSObject object = new JWSObject(header, jwtPayload);
-            object.sign(new MACSigner(this.getSecretKey()));
-            return object.serialize();
-        } catch (JOSEException e) {
-            throw new AppException(HttpStatus.UNAUTHORIZED,"JWT error" ,"jwt-e-01");
-        }
     }
 
     public String generateTokenCustomer(JWTPayloadDto payload) {
@@ -67,7 +48,7 @@ public abstract class BaseJWTUtil {
         }
     }
 
-    public JWTPayloadDto verifyTokenUser(String token) {
+    public JWTPayloadDto verifyTokenCustomer(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
             JWSVerifier verifier = new MACVerifier(this.getSecretKey());
@@ -93,7 +74,28 @@ public abstract class BaseJWTUtil {
         }
     }
 
-    public JWTPayloadDto verifyTokenCustomer(String token) {
+    public String generateTokenUser(JWTPayloadDto payload) {
+        try {
+            JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+            JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                    .subject(payload.getId())
+                    .issuer("ct298-gis.com")
+                    .issueTime(new Date())
+                    .expirationTime(new Date(System.currentTimeMillis() + getExpiration()))
+                    .claim("id", payload.getId())
+                    .claim("email", payload.getEmail())
+                    .claim("scope", payload.getScope())
+                    .build();
+            Payload jwtPayload = new Payload(claimsSet.toJSONObject());
+            JWSObject object = new JWSObject(header, jwtPayload);
+            object.sign(new MACSigner(this.getSecretKey()));
+            return object.serialize();
+        } catch (JOSEException e) {
+            throw new AppException(HttpStatus.UNAUTHORIZED,"JWT error" ,"jwt-e-01");
+        }
+    }
+
+    public JWTPayloadDto verifyTokenUser(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
             JWSVerifier verifier = new MACVerifier(this.getSecretKey());

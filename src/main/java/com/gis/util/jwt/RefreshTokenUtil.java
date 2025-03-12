@@ -32,16 +32,6 @@ public class RefreshTokenUtil extends BaseJWTUtil {
         return refreshExpiration;
     }
 
-    public String generateTokenUser(JWTPayloadDto payload, User user) {
-        RefreshToken refreshToken = refreshTokenRepository
-                .findByUser(user)
-                .orElseGet(() -> RefreshToken.builder().user(user).build());
-        String token = super.generateTokenUser(payload);
-        refreshToken.setToken(token);
-        refreshTokenRepository.save(refreshToken);
-        return token;
-    }
-
     public String generateTokenCustomer(JWTPayloadDto payload, Customer customer) {
         RefreshToken refreshToken = refreshTokenRepository
                 .findByCustomer(customer)
@@ -52,6 +42,30 @@ public class RefreshTokenUtil extends BaseJWTUtil {
         return token;
     }
 
+    public String generateTokenUser(JWTPayloadDto payload, User user) {
+        RefreshToken refreshToken = refreshTokenRepository
+                .findByUser(user)
+                .orElseGet(() -> RefreshToken.builder().user(user).build());
+        String token = super.generateTokenUser(payload);
+        refreshToken.setToken(token);
+        refreshTokenRepository.save(refreshToken);
+        return token;
+    }
+
+
+    @Override
+    public JWTPayloadDto verifyTokenCustomer(String token) {
+        JWTPayloadDto payload = super.verifyTokenCustomer(token);
+        RefreshToken refreshToken =  refreshTokenRepository
+                .findByCustomerId(payload.getId())
+                .orElseThrow(
+                        () -> new AppException(HttpStatus.NOT_FOUND, "Refresh token not found", "auth-e-01")
+                );
+        if(refreshToken.getToken() == null || !refreshToken.getToken().equals(token)){
+            throw new AppException(HttpStatus.NOT_FOUND, "Refresh token not found", "auth-e-01");
+        }
+        return payload;
+    }
 
     @Override
     public JWTPayloadDto verifyTokenUser(String token) {
@@ -67,17 +81,5 @@ public class RefreshTokenUtil extends BaseJWTUtil {
         return payload;
     }
 
-    @Override
-    public JWTPayloadDto verifyTokenCustomer(String token) {
-        JWTPayloadDto payload = super.verifyTokenCustomer(token);
-        RefreshToken refreshToken =  refreshTokenRepository
-                .findByCustomerId(payload.getId())
-                .orElseThrow(
-                        () -> new AppException(HttpStatus.NOT_FOUND, "Refresh token not found", "auth-e-01")
-                );
-        if(refreshToken.getToken() == null || !refreshToken.getToken().equals(token)){
-            throw new AppException(HttpStatus.NOT_FOUND, "Refresh token not found", "auth-e-01");
-        }
-        return payload;
-    }
+
 }

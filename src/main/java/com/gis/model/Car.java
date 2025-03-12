@@ -1,5 +1,7 @@
 package com.gis.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,10 +34,15 @@ public class Car implements Serializable {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private Boolean status = true;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vehicle_type_id", nullable = false)
+    @JsonBackReference("vehicleType-car")
     private VehicleType vehicleType;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "car")
+    @JsonManagedReference("driver-car")
     private List<Drive> drives = new ArrayList<>();
 }
