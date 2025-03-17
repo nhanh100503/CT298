@@ -54,6 +54,11 @@ public class DriverService {
         return userMapper.toDriverResponseList(users);
     }
 
+    public List<DriverResponse> getAllDriversFreeAndVehicleType(String vehicleTypeId){
+        List<User> users = userRepository.findUsersByVehicleTypeIdAndDriverStatusAndRole(vehicleTypeId, DriverStatus.FREE, ERole.DRIVER);
+        return userMapper.toDriverResponseList(users);
+    }
+
     public List<DriverResponse> getAllDriversBusy(){
         List<User> users = userRepository.findByRoleAndDriverStatus(ERole.DRIVER, DriverStatus.BUSY);
         return userMapper.toDriverResponseList(users);

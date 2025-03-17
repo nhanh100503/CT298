@@ -40,6 +40,16 @@ public class DriverController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @GetMapping("/all-driver-free/{vehicleTypeId}")
+    public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversFreeAndVehicleType(@PathVariable("vehicleTypeId") String vehicleTypeId) {
+        ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
+                .code("driver-s-02")
+                .message("Lấy danh sách tài xế theo loại xe hoạt động thành công")
+                .data(driverService.getAllDriversFreeAndVehicleType(vehicleTypeId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
     @GetMapping("/all-driver-busy")
     public ResponseEntity<ApiResponse<List<DriverResponse>>> listDriversBusy() {
         ApiResponse<List<DriverResponse>> apiResponse = ApiResponse.<List<DriverResponse>>builder()
