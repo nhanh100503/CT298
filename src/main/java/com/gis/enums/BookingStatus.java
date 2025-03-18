@@ -4,5 +4,6 @@ public enum BookingStatus {
     SUCCESS,
     PICKING,
     TRANSPORTING,
-    FINISH
+    FINISH,
+    REJECTED
 }

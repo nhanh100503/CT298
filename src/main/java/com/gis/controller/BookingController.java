@@ -32,6 +32,17 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @PutMapping("/rejected-booking/{bookingId}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ApiResponse<BookingResponse>> rejectedBooking(@PathVariable("bookingId") String bookingId) {
+        ApiResponse<BookingResponse> apiResponse = ApiResponse.<BookingResponse>builder()
+                .code("booking-s-01")
+                .data(bookingService.rejectBooking(bookingId))
+                .message("Từ chối chuyến xe thành công")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
     @GetMapping("/detail/{bookingId}")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('USER') or hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<BookingDetailResponse>> getBooking(@PathVariable("bookingId") String bookingId) {

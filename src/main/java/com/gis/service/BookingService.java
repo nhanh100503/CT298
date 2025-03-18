@@ -79,6 +79,24 @@ public class BookingService {
         return bookingResponse;
     }
 
+    public BookingResponse rejectBooking(String bookingId){
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
+        Customer customer = customerRepository.findById(booking.getCustomer().getId())
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Customer not found", "auth-e-02"));
+        Status status = Status.builder()
+                .booking(booking)
+                .bookingStatus(BookingStatus.REJECTED)
+                .time(LocalDateTime.now())
+                .build();
+        statusRepository.save(status);
+        BookingResponse bookingResponse = bookingMapper.toBookingResponse(booking);
+        bookingResponse.setStatus(status);
+        String customerId = customer.getId();
+        messagingTemplate.convertAndSendToUser(customerId, "/rejected-booking", bookingResponse);
+        return bookingResponse;
+    }
+
     public BookingDetailResponse getBooking(String bookingId){
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Booking not found", "booking-e-02"));
