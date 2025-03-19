@@ -33,7 +33,7 @@ public class BookingController {
     }
 
     @PutMapping("/rejected-booking/{bookingId}")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<ApiResponse<BookingResponse>> rejectedBooking(@PathVariable("bookingId") String bookingId) {
         ApiResponse<BookingResponse> apiResponse = ApiResponse.<BookingResponse>builder()
                 .code("booking-s-01")
