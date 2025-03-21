@@ -17,6 +17,8 @@ public interface BookingMapper {
 
     List<BookingResponse> toBookingResponseList(List<Booking> booking);
 
+    @Mapping(source = "driverX", target = "driverX")
+    @Mapping(source = "driverY", target = "driverY")
     @Mapping(source = "statuses", target = "statuses")
     BookingDetailResponse toBookingDetailResponse(Booking booking);
 
