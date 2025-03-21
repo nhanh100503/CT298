@@ -20,6 +20,8 @@ public class BookingResponse {
     Double startingY;
     Double destinationX;
     Double destinationY;
+    Double driverX;
+    Double driverY;
     LocalDateTime bookingTime;
     LocalDateTime finishTime;
     Double accumulatedDiscount;

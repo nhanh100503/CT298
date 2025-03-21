@@ -44,6 +44,12 @@ public class Booking implements Serializable {
     private Double destinationY;
 
     @Column(nullable = false)
+    private Double driverX;
+
+    @Column(nullable = false)
+    private Double driverY;
+
+    @Column(nullable = false)
     private LocalDateTime bookingTime;
 
     private LocalDateTime finishTime;

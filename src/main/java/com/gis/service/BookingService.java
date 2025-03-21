@@ -44,6 +44,8 @@ public class BookingService {
                 .startingY(request.getStartingY())
                 .destinationX(request.getDestinationX())
                 .destinationY(request.getDestinationY())
+                .driverX(request.getDriverX())
+                .driverY(request.getDriverY())
                 .bookingTime(LocalDateTime.now())
                 .accumulatedDiscount(request.getAccumulatedDiscount())
                 .memberDiscount(request.getMemberDiscount())

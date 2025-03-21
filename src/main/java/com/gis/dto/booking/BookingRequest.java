@@ -17,6 +17,8 @@ public class BookingRequest {
     Double startingY;
     Double destinationX;
     Double destinationY;
+    Double driverX;
+    Double driverY;
     Double accumulatedDiscount;
     Double memberDiscount;
     Double price;
