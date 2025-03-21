@@ -10,6 +10,8 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
+    @Mapping(source = "driverX", target = "driverX")
+    @Mapping(source = "driverY", target = "driverY")
     @Mapping(target = "status", expression = "java(booking.getStatuses() != null && !booking.getStatuses().isEmpty() ? booking.getStatuses().get(0) : null)")
     BookingResponse toBookingResponse(Booking booking);
 
