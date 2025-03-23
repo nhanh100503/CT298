@@ -67,7 +67,7 @@ public class StatusService {
         }
         if (lastStatus == BookingStatus.TRANSPORTING && currentStatus == BookingStatus.FINISH) {
             long pointsEarned = (long) (booking.getPrice() / 100);
-            customer.setAccumulate(customer.getAccumulate() + pointsEarned);
+            customer.setAccumulate(pointsEarned);
             customer.setTotal(customer.getTotal() + pointsEarned);
 
             updateCustomerType(customer);
