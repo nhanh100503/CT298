@@ -12,4 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class VehicleTypeResponse {
     String id;
     String model;
+    Integer seat;
 }
