@@ -17,4 +17,13 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     List<Booking> findBookingsByCustomerId(String customer_id);
     List<Booking> findBookingsByUserId(String user);
     Optional<Booking> findTopByUserIdOrderByBookingTimeDesc(String driverId);
+
+    @Query("SELECT FUNCTION('DATE', b.finishTime), SUM(b.price) * 1.0, COUNT(b.id) " +
+            "FROM Booking b JOIN Status s ON b.id = s.booking.id " +
+            "WHERE b.user.id = :driverId AND s.bookingStatus = 'FINISH' " +
+            "GROUP BY FUNCTION('DATE', b.finishTime)")
+    List<Object[]> findRevenueByDriverPerDay(@Param("driverId") String driverId);
+
+
+
 }
